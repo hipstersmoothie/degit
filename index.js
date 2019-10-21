@@ -8,6 +8,7 @@ var fs = _interopDefault(require('fs'));
 var path = _interopDefault(require('path'));
 var homeOrTmp = _interopDefault(require('home-or-tmp'));
 var EventEmitter = _interopDefault(require('events'));
+var gu = _interopDefault(require('githuburl'));
 var chalk = _interopDefault(require('chalk'));
 var sander = require('sander');
 require('https');
@@ -197,8 +198,18 @@ class Degit extends EventEmitter {
 						code: 'DOWNLOADING',
 						message: `downloading ${repo.url} to ${file}`,
 					});
+					const urls = gu(repo.url);
 
-					await exec(`git clone --depth 1 ${repo.url} ${file}`);
+					try {
+						try {
+							await exec(`git clone --depth 1 ${urls.https_clone_url} ${file}`);
+						} catch (error) {
+							await exec(`git clone --depth 1 ${urls.ssh_clone_url} ${file}`);
+						}
+					} catch (error) {
+						console.log(`Could not clone repo with HTTPS or SSH: ${repo.url}`);
+					}
+
 					await exec(
 						`cd ${file} && git fetch origin ${hash} && git checkout ${hash}`
 					);

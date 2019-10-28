@@ -1,8 +1,6 @@
 'use strict';
 
-function _interopDefault(ex) {
-	return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
-}
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var fs = _interopDefault(require('fs'));
 var path = _interopDefault(require('path'));
@@ -202,9 +200,9 @@ class Degit extends EventEmitter {
 
 					try {
 						try {
-							await exec(`git clone --depth 1 ${urls.https_clone_url} ${file}`);
+							await exec(`git clone ${urls.https_clone_url} ${file}`);
 						} catch (error) {
-							await exec(`git clone --depth 1 ${urls.ssh_clone_url} ${file}`);
+							await exec(`git clone ${urls.ssh_clone_url} ${file}`);
 						}
 					} catch (error) {
 						console.log(`Could not clone repo with HTTPS or SSH: ${repo.url}`);
